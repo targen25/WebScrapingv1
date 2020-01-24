@@ -14,9 +14,9 @@ namespace webScraping
 {
     public partial class fmWebScraping : Form
     {
-        static DataTable table;
-        static int inputYahoo = 0;
-        static int inputBind = 0;
+         DataTable table;
+         int inputYahoo = 0;
+         int inputBind = 0;
 
         public fmWebScraping()
         {
@@ -35,44 +35,21 @@ namespace webScraping
         private void buSearch_Click(object sender, EventArgs e)
         {
             var input = "\""+ txSearch.Text+"\"";
-            GetHtml(input);
             table.Rows.Add(inputYahoo, inputBind, "");
-        }
-        static async void GetHtml(string input)
-        {
-
-            //----Search on Yahoo
-            string urlYahoo = "https://search.yahoo.com/search?p=" + input;
-
-            HttpClient httpClient = new HttpClient();
-            string htmlYahoo = await httpClient.GetStringAsync(urlYahoo);
-
-            string toFindYahoo = "Next</a><span>";
-            int startYahoo = htmlYahoo.IndexOf(toFindYahoo) + toFindYahoo.Length;
-            int endYahoo = startYahoo + 40;
-            string resultYahoo = htmlYahoo.Substring(startYahoo, endYahoo - startYahoo);
-
-            string onlyNumberYahoo = Regex.Replace(resultYahoo, "[a-zA-Z</>,\n. ]", "");
-            inputYahoo = Convert.ToInt32(onlyNumberYahoo);
-
-            table.Rows[0][0] = inputYahoo;
+            GetHtml(input);
             
-            //----Search on Bind
-            string urlBind = "https://www.bing.com/search?q=" + input;
-            httpClient = new HttpClient();
-            string htmlBind = await httpClient.GetStringAsync(urlBind);
-
-            string toFindBind = "class=\"sb_count\"";
-            int startBind = htmlBind.IndexOf(toFindBind) + toFindBind.Length;
-            int endBind = startBind + 40;
-            string resultBind = htmlBind.Substring(startBind, endBind - startBind);
-
-            string onlyNumberBind = Regex.Replace(resultBind, "[a-zA-Z</>,\n. ]", "");
-            inputBind = Convert.ToInt32(onlyNumberBind);
-
+        }
+        private async void GetHtml(string input)
+        {
+            //----Result of yahoo
+            EntityResult eResult = new EntityResult();
+            inputYahoo = await eResult.GetResultYahoo(input);
+            table.Rows[0][0] = inputYahoo;
+            //----Result of bind
+            inputBind = await eResult.GetResultBind(input);
             table.Rows[0][1] = inputBind;
             //---Compare the result of the two search engines
-            if (inputYahoo> inputBind)
+            if (inputYahoo > inputBind)
             {
                 table.Rows[0][2] = "Yahoo";
             }
@@ -81,7 +58,6 @@ namespace webScraping
                 table.Rows[0][2] = "Bind";
             }
 
-            
         }
 
         private void buClear_Click(object sender, EventArgs e)
