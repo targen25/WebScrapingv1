@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace webScraping
@@ -42,11 +34,12 @@ namespace webScraping
         private async void GetHtml(string input)
         {
             //----Result of yahoo
-            EntityResult eResult = new EntityResult();
-            inputYahoo = await eResult.GetResultYahoo(input);
+            SearchEngine oSearchYahoo = Creator.CreatorSearchEngine(Creator.YAHOO);
+            inputYahoo = await oSearchYahoo.GetResult(input);
             table.Rows[0][0] = inputYahoo;
             //----Result of bind
-            inputBind = await eResult.GetResultBind(input);
+            SearchEngine oSearchBind = Creator.CreatorSearchEngine(Creator.BIND);
+            inputBind = await oSearchBind.GetResult(input);
             table.Rows[0][1] = inputBind;
             //---Compare the result of the two search engines
             if (inputYahoo > inputBind)

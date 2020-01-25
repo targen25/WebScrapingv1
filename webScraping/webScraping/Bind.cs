@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace webScraping
 {
-    public class EntityQuantity
+    class Bind : SearchEngine
     {
-      public async Task<int> GetQuantity(string url, string keyWord)
+        public override async Task<int> GetResult(string input)
         {
             int quantity = 0;
+            string url = "https://www.bing.com/search?q=" + input;
+            string keyWord = "class=\"sb_count\"";
+
             HttpClient httpClient = new HttpClient();
             string html = await httpClient.GetStringAsync(url);
 
