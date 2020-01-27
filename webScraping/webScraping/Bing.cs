@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace webScraping
 {
-    class Bind : SearchEngine
+    class Bing : SearchEngine
     {
-        public override async Task<int> GetResult(string input)
+        public override async Task<long> GetResult(string input)
         {
-            int quantity = 0;
+            long quantity = 0;
             string url = "https://www.bing.com/search?q=" + input;
             string keyWord = "class=\"sb_count\"";
 
@@ -21,7 +21,7 @@ namespace webScraping
             string result = html.Substring(start, end - start);
 
             string onlyNumber = Regex.Replace(result, "[a-zA-Z</>,\n. ]", "");
-            quantity = Convert.ToInt32(onlyNumber);
+            quantity = Convert.ToInt64(onlyNumber);
             return quantity;
 
         }

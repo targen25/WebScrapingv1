@@ -4,7 +4,7 @@ namespace webScraping
 {
     public abstract class SearchEngine
     {
-        public abstract Task<int> GetResult(string input);
+        public abstract Task<long> GetResult(string input);
 
     }
 }
